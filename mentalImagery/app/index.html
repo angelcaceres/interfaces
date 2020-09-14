@@ -8,13 +8,12 @@
     <title>Menu BCI</title>
 
     <!-- Estilos -->
-    <link rel="stylesheet" href="styles/p300style.css">
+    <link rel="stylesheet" href="styles/mentalImgStyle.css">
 
     <!-- Insert this line above script imports  -->
     <script>if (typeof module === 'object') { window.module = module; module = undefined; };</script>
 
     <script src="../jquery.js"></script>
-    <script src="../pictarea.min.js"></script>
 
     <!--jQuery-->
     <script src="scripts/openbci.js"></script> <!-- Funciones para trabajar con Cyton -->
@@ -34,12 +33,8 @@
         });
     </script>
 
-    <div id="Menu" style="color: white; float: left; width: 800px;">
-        <div class="menu-server" style="float: left; width: 100%;">
-            <p style="color: limegreen;"></p>
-        </div>
-
-        
+    <div class='fullscreenDiv'>
+        <div class="center" id="text"></div>
     </div>
 
     <!-- Vista Protocolo P300 (Eric) -->
@@ -82,32 +77,6 @@
         });
 
         server.bind();
-
-
-        // MAP EEG
-        $('#img-eeg').pictarea({
-            normal: {
-                fillStyle: 'rgba(255,0,0,.4)',
-                strokeStyle: 'rgba(255,0,0,.8)',
-                lineWidth: 1
-            },
-            hover: {
-                fillStyle: 'rgba(0,0,255,.6)',
-                strokeStyle: '#fff',
-                lineWidth: 2,
-                shadowColor: '#fff',
-                shadowBlur: 10
-            },
-            active: {
-                fillStyle: 'rgba(255,255,255,.8)',
-                strokeStyle: '#f00',
-                lineWidth: 2
-            },
-            disabled: {
-                fillStyle: 'rgba(0,0,0,.4)',
-                strokeStyle: 'transparent'
-            }
-        });
     })
 </script>
 

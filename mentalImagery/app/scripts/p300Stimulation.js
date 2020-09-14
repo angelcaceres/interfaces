@@ -1,24 +1,24 @@
 (function ($) {
-    jQuery.fn.p300Stimulation = function () {
+    jQuery.fn.mentalImgStimulation = function () {
 
         var settings = arguments[0];
         var id = $(this).attr("id");
-        var tmp = $.fn.p300Stimulation.tmp[id];
+        var tmp = $.fn.mentalImgStimulation.tmp[id];
 
         var config = {
-            elements: [
-                { id: 0, img: 'resources/p300/img/galleta.png' },
-                { id: 1, img: 'resources/p300/img/cereal.png' },
-                { id: 2, img: 'resources/p300/img/refresco.png' },
-                { id: 3, img: 'resources/p300/img/cocina.png' },
-                { id: 4, img: 'resources/p300/img/sala.png' },
-                { id: 5, img: 'resources/p300/img/dormitorio.png' },
-                { id: 6, img: 'resources/p300/img/persona1.png' },
-                { id: 7, img: 'resources/p300/img/persona2.png' },
-                { id: 8, img: 'resources/p300/img/persona3.png' },
-                { id: 9, img: 'resources/p300/img/telefono.png' },
-                { id: 10, img: 'resources/p300/img/tv.png' },
-                { id: 11, img: 'resources/p300/img/medicina.png' },
+            photos: [
+                { id: 0, img: 'resources/mentalImg/img/carretera.jpeg' },
+                { id: 1, img: 'resources/mentalImg/img/ciudad.jpg' },
+                { id: 2, img: 'resources/mentalImg/img/construccion.jpeg' },
+                { id: 3, img: 'resources/mentalImg/img/fabrica.jpg' },
+                { id: 4, img: 'resources/mentalImg/img/terreno.jpg' },
+            ],
+            objects:[
+                { id: 0, img: 'resources/mentalImg/img/cereal.jpg' },
+                { id: 1, img: 'resources/mentalImg/img/cocacola.jpg' },
+                { id: 2, img: 'resources/mentalImg/img/galletas.jpg' },
+                { id: 3, img: 'resources/mentalImg/img/pastillas.jpg' },
+                { id: 4, img: 'resources/mentalImg/img/telefono.jpg' },
             ],
 
             currentData: {
@@ -73,8 +73,6 @@
 
                 // Obtiene secuencias de flash
                 stimulationArray = getRandom(tmp.elements.length);
-                //console.log('Secuencia de la matriz:');
-                //console.log(stimulationArray);
                 setTimeout(() => {
                     i = 0;
                     stimulation();
@@ -179,19 +177,15 @@
                 // Guardo datos temporalmente
                 var opts = $.extend(true, {}, config, settings);
 
-                // Agregando rows a la tabla
-                opts.elements.forEach(row => {
-                    var $row = $('<div></div>');
-                    $row.addClass('row');
-                    $row.css('background-image', `url("${row.img}")`)
-                    $(`#${id}`).append($row);
+                //se muestran las imagenes
+                opts.photos.forEach(item => {
+                    console.log("ola k pasa");
                 });
 
                 // Guardando configuraciones
-                $.fn.p300Stimulation.tmp[id] = opts;
-                //console.log($.fn.p300Stimulation.tmp[id]);
+                $.fn.mentalImgStimulation.tmp[id] = opts;
                 break;
         }
     };
-    $.fn.p300Stimulation.tmp = new Array();
+    $.fn.mentalImgStimulation.tmp = new Array();
 })(jQuery);
