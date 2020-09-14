@@ -26,7 +26,7 @@
 
 </head>
 
-<body style="background-color:black;">
+<body style="background-color:grey;">
 
     <script>
         $(function () {
@@ -39,40 +39,7 @@
             <p style="color: limegreen;"></p>
         </div>
 
-        <div class="menu-content" style="float: left; width: 250px;">
-            <h3>En Linea</h3>
-            <input type="radio" name="mode" id="radioOnline" value="online" />
-            <label for="radioOnline">En Línea</label> <br>
-
-            <h3>Fuera de Línea</h3>
-            <input type="radio" name="mode" id="radioEtiquetado" value="etiquetado" />
-            <label for="radioEtiquetado">Adquisición y Etiquetado</label><br>
-
-            <input type="radio" name="mode" id="radioCalibracion" value="calibracion" />
-            <label for="radioCalibracion">Calibración</label><br>
-
-            <input type="radio" name="mode" id="radioClasificacion" value="clasificacion" />
-            <label for="radioClasificacion">Clasificación</label><br>
-        </div>
-
-        <div class="menu-parameters" style="float: left; width: 400px;">
-            <h3>Parametros</h3>
-            <span>ID Sujeto: </span> <input type="text" /> <br><br>
-            <span># Intentos: </span> <input type="number" /> <br><br>
-            <span>Canales: </span> <br>
-            <input type="radio" name="channels" id="radioChannels8" value="8" />
-            <label for="radioChannels8">8 canales</label><br>
-            <input type="radio" name="channels" id="radioChannels16" value="16" />
-            <label for="radioChannels16">16 canales</label><br>
-        </div>
-
-        <div class="menu-mapa" style="float: left; width: 100%; margin-top: 50px;">
-            <img src="resources/EggMap.png" width="500" height="450" id="img-eeg" usemap="#map-eeg"
-                style="background-color: #fff;" />
-            <map name="map-eeg">
-                <area shape="circle" coords="50,50,20" alt="B1" target="1" />
-            </map>
-        </div>
+        
     </div>
 
     <!-- Vista Protocolo P300 (Eric) -->
