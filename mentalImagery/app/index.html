@@ -7,77 +7,66 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Estimulación: Imagineria Mental</title>
 
-    <!-- Estilos -->
-    <link rel="stylesheet" href="styles/mentalImgStyle.css">
 
-    <!-- Insert this line above script imports  -->
-    <script>if (typeof module === 'object') { window.module = module; module = undefined; };</script>
+    <link rel="stylesheet" href="styles/mentalImgStyle.css">
 
     <script src="../jquery.js"></script>
 
-    <!--jQuery-->
-    <script src="scripts/openbci.js"></script> <!-- Funciones para trabajar con Cyton -->
-    <script src="scripts/p300Stimulation.js"></script> <!-- Funciones para iniciar el protocolo P300 -->
-
-    <!-- Insert this line after script imports -->
-    <script>if (window.module) module = window.module;</script>
 
 
 </head>
 
 <body style="background-color:grey;">
 
-    <script>
-        $(function () {
-            $("#ProtocoloP300").load("p300.html");
-        });
-    </script>
-
-    <div class='fullscreenDiv'>
+    <div class='fullscreenDiv' id="fullscreenDiv">
+        <button type="button" onclick="startStimulation()" id="startStimulation">Iniciar estimulación</button>
+        <img id="flip" src="">
         <div class="center" id="text"></div>
     </div>
+    <script>
+        document.getElementById("startStimulation").addEventListener("click", startStimulation);
+var images = [];
+images[0] = 'resources/mentalImg/img/carretera.jpeg';
+images[1] = 'resources/mentalImg/img/ciudad.jpg';
+images[2] = 'resources/mentalImg/img/construccion.jpeg';
+images[3] = 'resources/mentalImg/img/fabrica.jpg';
+images[4] = 'resources/mentalImg/img/terreno.jpg';
 
-    <!-- Vista Protocolo P300 (Eric) -->
-    <div id="ProtocoloP300" >
-    </div>
-    <!-- Vista Protocolo P300 (Eric) -->
+var current = 0;
+
+var text = $('#text');
+var flip = $('#flip');
+
+function startStimulation() {
+  text.text('');
+  flip.hide();
+  console.log(current);
+  setTimeout(function() {
+    text.text('');
+    flip.hide();
+  }, 4000);
+
+  setTimeout(function() {
+    text.text('');
+    flip.show();
+    flip.attr('src', images[current]);
+  }, 1400);
+
+  setTimeout(function() {
+    flip.hide();
+    text.text("000");
+  }, 600);
+
+  setTimeout(function() {
+    if (current < images.length - 1) {
+      current++;
+      startStimulation();
+    }
+  }, 6000)
+}
+</script>
+
 
 </body>
-
-<script>
-    $(document).ready(function () {
-        var udp = require('dgram');
-
-        var server = udp.createSocket('udp4');
-
-        // En caso de error
-        server.on('error', (err) => {
-            console.error("Error:", err);
-            server.close();
-            process.exit();
-        })
-
-        // En caso de que 
-        server.on('listening', function () {
-            var address = server.address();
-            var port = address.port;
-            var family = address.family;
-            var ipaddr = address.address;
-            $(".menu-server > p").text("Escuchando puerto: " + port);
-            console.log('Server is listening at port ' + port);
-            console.log('Server ip :' + ipaddr);
-            console.log('Server is IP4/IP6 : ' + family);
-        });
-
-
-        // Se llama cuando llega un nuevo datagram msg
-        server.on('message', function (msg, info) {
-            console.log('Data received from client : ' + msg.toString());
-            console.log('Received %d bytes from %s:%d\n', msg.length, info.address, info.port);
-        });
-
-        server.bind();
-    })
-</script>
 
 </html>
