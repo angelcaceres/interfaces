@@ -12,198 +12,120 @@
 
     <!-- CSS only -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-
 <!-- JS, Popper.js, and jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-
-
-
 </head>
 
 <body style="background-color:grey;">
   <div class="container">
     <div class="form-group">
-      <label for="nombre">Nombre</label>
+      <label for="nombre" id="name">Nombre</label>
       <input type="text" class="form-control" id="name" placeholder="Montserrat">
     
-    <button type="button" onclick="start()" id="startStimulation" class="btn btn-primary">Iniciar ajuste del modelo</button>
-    <button type="button" onclick="start()" id="startStimulation" class="btn btn-success">Iniciar percepción</nav></button>
-    <button type="button" onclick="start()" id="startStimulation" class="btn btn-info">Iniciar imaginería mental</button>
-    <img id="flip" src="">
+    <button type="button" onclick="start('adjustement')" id="startAdjustement" class="btn btn-primary">Iniciar ajuste del modelo</button>
+    <button type="button" onclick="start('perception')" id="startPerception" class="btn btn-success">Iniciar percepción</nav></button>
+    <button type="button" onclick="imagery()" id="startImagery" class="btn btn-info">Iniciar imaginería mental</button>
+    <img id="flip" class="flip" src="">
     <div class="center" id="text"></div>
     </div>
   </div>
-        
 
-    <script>
-      var text = $('#text');
-var flip = $('#flip');
-var images = [];
-var current = 0;
-images[0] = 'resources/mentalImg/img/carretera.jpeg';
-images[1] = 'resources/mentalImg/img/ciudad.jpg';
-images[2] = 'resources/mentalImg/img/construccion.jpeg';
-images[3] = 'resources/mentalImg/img/fabrica.jpg';
-images[4] = 'resources/mentalImg/img/terreno.jpg';
+<script>
 
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-function start() {
-  
-  const primero = new Promise(
-    resolve =>{
-      setTimeout(() => {
-        resolve('promesa 1');
-      },4000);
-    }
-  );
-  
-  const segundo = new Promise(
-    resolve =>{
-      setTimeout(() => {
-        resolve('promesa 2');
-      },4000);
-    }
-  );
-  
-  const main = async() => {
-    console.log(await primero);
-    console.log(await segundo);
+var images = [
+    { id: 0, img: 'resources/mentalImg/img/carretera.jpeg',text:'000'},
+    { id: 1, img: 'resources/mentalImg/img/ciudad.jpg',text:'000' },
+    { id: 2, img: 'resources/mentalImg/img/construccion.jpeg',text:'000'},
+    { id: 3, img: 'resources/mentalImg/img/fabrica.jpg',text:'000'},
+    { id: 4, img: 'resources/mentalImg/img/terreno.jpg',text:'000'},
+];
 
-  }
+var objects = [
+    { id: 0, img: 'resources/mentalImg/img/cereal.jpg', text:'crl'},
+    { id: 1, img: 'resources/mentalImg/img/cocacola.jpg', text:'coca'},
+    { id: 2, img: 'resources/mentalImg/img/galletas.jpg', text:'gllt'},
+    { id: 3, img: 'resources/mentalImg/img/pastillas.jpg',text:'mdcn'},
+    { id: 4, img: 'resources/mentalImg/img/telefono.jpg', text:'tlfn'},
 
-  main();
-  
-  
-  
-  
-  /*
-  var interval = setInterval(function(){
-  first().then(function(){
-    text.text('');
-  });
-  console.log(current);
-  if(current<images.length){
-    current++;
-  }else{
-    clearInterval(interval);
-  }
+];
 
-},4000);
-
-async function first() {
-text.text('000')
-    await delay(4000);
-    return 1;
-}*/
-}
-
-async function first() {
-    console.log("this might take some time....");
-    await delay(4000);
-    console.log("done!")
-}
-
-
-async function second() {
-    console.log("this might take some time....");
-    await delay(1400);
-    console.log("done!")
-}
-
-async function third() {
-    console.log("this might take some time....");
-    await delay(600);
-    console.log("done!")
-}
-
-/*
-something();
+var text = $('#text');
+var flip = $('#flip'); 
+function start(identifier) {
+var name = document.getElementById("name").value;
 
 var current = 0;
+var array = [];
 
-
-
-var stimulationTotal = setInterval(function() {
-  var result = first().then(
-    second.then(
-      third();
-    )
-  )
-
-  if(current<images.length){
-    current++;
-  }else{
-    clearInterval(stimulationTotal);
-  }
-
-}, 6000);
-
-async function first() {
-
-let promise = new Promise((resolve, reject) => {
-  setTimeout(() => resolve("done!"), 4000)
-});
-
-let result = await promise; // wait until the promise resolves (*)
-
-alert(result); // "done!"
+if(identifier == 'adjustement'){
+array = images;
+}else {
+array = objects;
 }
 
-async function second() {
+const interval = setInterval(function(){
+main(current);
+if(current<array.length-1){
+current ++
+}else{
+clearInterval(interval);
+}
+},7000);
+const timer = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-let promise = new Promise((resolve, reject) => {
-  setTimeout(() => resolve("done!"), 4000)
-});
+async function main(i)
+{
+text.text('.');
+await timer(4000);
+flip.attr('src', array[i].img);
+flip.show();
 
-let result = await promise; // wait until the promise resolves (*)
+await timer(1600);
+flip.hide();
+flip.attr('src', '');
+text.text(array[i].text);
 
-alert(result); // "done!"
+await timer(600);
+text.text('');
+}
 }
 
-async function third() {
+function imagery() {
+var name = document.getElementById("name").value;
 
-let promise = new Promise((resolve, reject) => {
-  setTimeout(() => resolve("done!"), 4000)
-});
+var current = 0;
+const interval = setInterval(function(){
+main(current);
+if(current<objects.length-1){
+current ++
+}else{
+clearInterval(interval);
+}
+},7000);
+const timer = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-let result = await promise; // wait until the promise resolves (*)
+async function main(i)
+{
+flip.hide();
+text.text('');
+await timer(4000);
+text.text('.');
+await timer(1600);
+flip.attr('src', '');
 
-alert(result); // "done!"
+text.text(objects[i].text);
+
+await timer(600);
+
+text.text('');
+}
+
 }
 
 
-function startStimulation() {
-  text.text('');
-  flip.hide();
-  console.log(current);
-  setTimeout(function() {
-    text.text('');
-    flip.hide();
-  }, 4000);
-
-  setTimeout(function() {
-    text.text('');
-    flip.show();
-    flip.attr('src', images[current]);
-  }, 1400);
-
-  setTimeout(function() {
-    flip.hide();
-    text.text("000");
-  }, 600);
-
-  setTimeout(function() {
-    if (current < images.length - 1) {
-      current++;
-      startStimulation();
-    }
-  }, 6000)
-}*/
 </script>
-
-
 </body>
 
 </html>
