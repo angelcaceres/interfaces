@@ -34,6 +34,11 @@
 
 <script>
 
+var labelDataFile = "id_del_sujeto_label.dat";
+var signalDataFile = "id_del_sujeto_signal.dat";
+var bffLabels = "";
+var bffSignal = "";
+
 var images = [
     { id: 0, img: 'resources/mentalImg/img/carretera.jpeg',text:'000'},
     { id: 1, img: 'resources/mentalImg/img/ciudad.jpg',text:'000' },
@@ -78,11 +83,14 @@ const timer = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 async function main(i)
 {
 text.text('.');
+prerun();
 await timer(4000);
+preseq();
 flip.attr('src', array[i].img);
 flip.show();
 
 await timer(1600);
+postseq();
 flip.hide();
 flip.attr('src', '');
 text.text(array[i].text);
