@@ -2,20 +2,22 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Estimulación: Imagineria Mental</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Estimulación: Imagineria Mental</title>
 
 
-    <link rel="stylesheet" href="styles/mentalImgStyle.css">
+  <link rel="stylesheet" href="styles/mentalImgStyle.css">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="styles/bootstrap.min.css" />
 
-    <!-- CSS only -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-<!-- JS, Popper.js, and jQuery -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <!-- Bootstrap Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script>let $ = require('jquery');</script>
+  <script>require('popper.js');</script>
+  <script>require('bootstrap');</script>
+  <script>if (window.module) module = window.module;</script>
 </head>
 
 <body style="background-color:grey;">
@@ -23,117 +25,159 @@
     <div class="form-group">
       <label for="nombre" id="name">Nombre</label>
       <input type="text" class="form-control" id="name" placeholder="Montserrat">
-    
-    <button type="button" onclick="start('adjustement')" id="startAdjustement" class="btn btn-primary">Iniciar ajuste del modelo</button>
-    <button type="button" onclick="start('perception')" id="startPerception" class="btn btn-success">Iniciar percepción</nav></button>
-    <button type="button" onclick="imagery()" id="startImagery" class="btn btn-info">Iniciar imaginería mental</button>
-    <img id="flip" class="flip" src="">
-    <div class="center" id="text"></div>
+
+      <button type="button" onclick="start('adjustement')" id="startAdjustement" class="btn btn-primary">Iniciar ajuste
+        del modelo</button>
+      <button type="button" onclick="start('perception')" id="startPerception" class="btn btn-success">Iniciar
+        percepción</nav></button>
+      <button type="button" onclick="imagery()" id="startImagery" class="btn btn-info">Iniciar imaginería
+        mental</button>
+      <img id="flip" class="flip" src="">
+      <div class="center" id="text"></div>
     </div>
   </div>
 
-<script>
+  <script>
 
-var labelDataFile = "id_del_sujeto_label.dat";
-var signalDataFile = "id_del_sujeto_signal.dat";
-var bffLabels = "";
-var bffSignal = "";
+    var labelDataFile = "id_del_sujeto_label.dat";
+    var signalDataFile = "id_del_sujeto_signal.dat";
+    var bffLabels = "";
+    var bffSignal = "";
 
-var images = [
-    { id: 0, img: 'resources/mentalImg/img/carretera.jpeg',text:'000'},
-    { id: 1, img: 'resources/mentalImg/img/ciudad.jpg',text:'000' },
-    { id: 2, img: 'resources/mentalImg/img/construccion.jpeg',text:'000'},
-    { id: 3, img: 'resources/mentalImg/img/fabrica.jpg',text:'000'},
-    { id: 4, img: 'resources/mentalImg/img/terreno.jpg',text:'000'},
-];
+    var images = [
+      { id: 0, img: 'resources/mentalImg/img/carretera.jpeg', text: '000' },
+      { id: 1, img: 'resources/mentalImg/img/ciudad.jpg', text: '000' },
+      { id: 2, img: 'resources/mentalImg/img/construccion.jpeg', text: '000' },
+      { id: 3, img: 'resources/mentalImg/img/fabrica.jpg', text: '000' },
+      { id: 4, img: 'resources/mentalImg/img/terreno.jpg', text: '000' },
+    ];
 
-var objects = [
-    { id: 0, img: 'resources/mentalImg/img/cereal.jpg', text:'crl'},
-    { id: 1, img: 'resources/mentalImg/img/cocacola.jpg', text:'coca'},
-    { id: 2, img: 'resources/mentalImg/img/galletas.jpg', text:'gllt'},
-    { id: 3, img: 'resources/mentalImg/img/pastillas.jpg',text:'mdcn'},
-    { id: 4, img: 'resources/mentalImg/img/telefono.jpg', text:'tlfn'},
+    var objects = [
+      { id: 0, img: 'resources/mentalImg/img/cereal.jpg', text: 'crl' },
+      { id: 1, img: 'resources/mentalImg/img/cocacola.jpg', text: 'coca' },
+      { id: 2, img: 'resources/mentalImg/img/galletas.jpg', text: 'gllt' },
+      { id: 3, img: 'resources/mentalImg/img/pastillas.jpg', text: 'mdcn' },
+      { id: 4, img: 'resources/mentalImg/img/telefono.jpg', text: 'tlfn' },
 
-];
+    ];
 
-var text = $('#text');
-var flip = $('#flip'); 
-function start(identifier) {
-var name = document.getElementById("name").value;
+    var text = $('#text');
+    var flip = $('#flip');
+    function start(identifier) {
+      var name = document.getElementById("name").value;
 
-var current = 0;
-var array = [];
+      var current = 0;
+      var array = [];
 
-if(identifier == 'adjustement'){
-array = images;
-}else {
-array = objects;
-}
+      if (identifier == 'adjustement') {
+        array = images;
+      } else {
+        array = objects;
+      }
 
-const interval = setInterval(function(){
-main(current);
-if(current<array.length-1){
-current ++
-}else{
-clearInterval(interval);
-}
-},7000);
-const timer = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+      const interval = setInterval(function () {
+        main(current);
+        if (current < array.length - 1) {
+          current++
+        } else {
+          clearInterval(interval);
+        }
+      }, 7000);
+      const timer = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-async function main(i)
-{
-text.text('.');
-prerun();
-await timer(4000);
-preseq();
-flip.attr('src', array[i].img);
-flip.show();
+      async function main(i) {
+        text.text('.');
+        //prerun();
+        await timer(4000);
+        //preseq();
+        flip.attr('src', array[i].img);
+        flip.show();
 
-await timer(1600);
-postseq();
-flip.hide();
-flip.attr('src', '');
-text.text(array[i].text);
+        await timer(1600);
+        //postseq();
+        flip.hide();
+        flip.attr('src', '');
+        text.text(array[i].text);
 
-await timer(600);
-text.text('');
-}
-}
+        await timer(600);
+        text.text('');
+        fs.writeFile(pathfiles + labelDataFile, bffLabels, (err) => {
+                if(err) console.log("error: " + err)
+                else console.log("saved data label file");
+            });
+      }
+    }
 
-function imagery() {
-var name = document.getElementById("name").value;
+    function imagery() {
+      var name = document.getElementById("name").value;
 
-var current = 0;
-const interval = setInterval(function(){
-main(current);
-if(current<objects.length-1){
-current ++
-}else{
-clearInterval(interval);
-}
-},7000);
-const timer = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+      var current = 0;
+      const interval = setInterval(function () {
+        main(current);
+        if (current < objects.length - 1) {
+          current++
+        } else {
+          clearInterval(interval);
+        }
+      }, 7000);
+      const timer = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-async function main(i)
-{
-flip.hide();
-text.text('');
-await timer(4000);
-text.text('.');
-await timer(1600);
-flip.attr('src', '');
+      async function main(i) {
+        flip.hide();
+        text.text('');
+        await timer(4000);
+        text.text('.');
+        await timer(1600);
+        flip.attr('src', '');
 
-text.text(objects[i].text);
+        text.text(objects[i].text);
 
-await timer(600);
+        await timer(600);
 
-text.text('');
-}
+        text.text('');
+      }
 
-}
+    }
+
+    $(document).ready(function () {
+      var udp = require('dgram');
+
+      var server = udp.createSocket('udp4');
+
+      // En caso de error
+      server.on('error', (err) => {
+        console.error("Error:", err);
+        server.close();
+        process.exit();
+      })
+
+      // En caso de que 
+      server.on('listening', function () {
+        var address = server.address();
+        var port = address.port;
+        var family = address.family;
+        var ipaddr = address.address;
+        $(".menu-server > p").text("Escuchando puerto: " + port);
+        console.log('Server is listening at port ' + port);
+        console.log('Server ip :' + ipaddr);
+        console.log('Server is IP4/IP6 : ' + family);
+        console.log(server);
+      });
 
 
-</script>
+      // Se llama cuando llega un nuevo datagram msg
+      server.on('message', function (msg, info) {
+        console.log('Data received from client : ' + msg.toString());
+        console.log('Received %d bytes from %s:%d\n', msg.length, info.address, info.port);
+      });
+
+      server.bind("12345");
+
+    })
+
+  </script>
+
+
 </body>
 
 </html>
