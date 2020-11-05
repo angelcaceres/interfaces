@@ -34,12 +34,12 @@
         });
     </script>
 
-    <div id="Menu" style="color: white; float: left; width: 800px;">
+    <div id="Menu" style="color: white; float: left; width: 800px;" hidden>
         <div class="menu-server" style="float: left; width: 100%;">
             <p style="color: limegreen;"></p>
         </div>
 
-        <div class="menu-content" style="float: left; width: 250px;">
+        <div class="menu-content" style="float: left; width: 250px;" hidden>
             <h3>En Linea</h3>
             <input type="radio" name="mode" id="radioOnline" value="online" />
             <label for="radioOnline">En Línea</label> <br>
@@ -55,7 +55,7 @@
             <label for="radioClasificacion">Clasificación</label><br>
         </div>
 
-        <div class="menu-parameters" style="float: left; width: 400px;">
+        <div class="menu-parameters" style="float: left; width: 400px;" hidden>
             <h3>Parametros</h3>
             <span>ID Sujeto: </span> <input type="text" /> <br><br>
             <span># Intentos: </span> <input type="number" /> <br><br>
@@ -66,7 +66,7 @@
             <label for="radioChannels16">16 canales</label><br>
         </div>
 
-        <div class="menu-mapa" style="float: left; width: 100%; margin-top: 50px;">
+        <div class="menu-mapa" style="float: left; width: 100%; margin-top: 50px;" hidden>
             <img src="resources/EggMap.png" width="500" height="450" id="img-eeg" usemap="#map-eeg"
                 style="background-color: #fff;" />
             <map name="map-eeg">
@@ -76,7 +76,7 @@
     </div>
 
     <!-- Vista Protocolo P300 (Eric) -->
-    <div id="ProtocoloP300" hidden>
+    <div id="ProtocoloP300" >
     </div>
     <!-- Vista Protocolo P300 (Eric) -->
 

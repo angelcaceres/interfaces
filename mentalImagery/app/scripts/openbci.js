@@ -2,7 +2,7 @@
 const Cyton = require('@openbci/cyton'); // SDK para Cyton
 const fs = require('fs'); // Para escribir en archivos
 var pathfiles = "app/data/";
-var eegDataFile = "id_del_sujeto_EEG.dat";
+var eegDataFile = "angel.dat";
 var bufferCyton = "";
 var bufferPacket = -1;
 
@@ -63,9 +63,9 @@ function StartStreaming(callback) {
 
 // Detiene la Trasmision
 function StopStreaming() {
-    if(Ourboard.isStreaming)
+    if(true)
     {
-        if(bufferCyton != undefined || bufferCyton != null)
+        if(true)
         {
             fs.writeFile(pathfiles + eegDataFile, bufferCyton, (err) => {
                 if(err) console.log("error: " + err)
@@ -110,6 +110,8 @@ function SaveDataFromCyton(data) {
 
     bff += "\n";
     bufferCyton += bff;
+
+    console.log(bff);
 
 
     var aux = {
