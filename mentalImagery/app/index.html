@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -10,23 +9,22 @@
 
   <link rel="stylesheet" href="styles/mentalImgStyle.css">
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="styles/bootstrap.min.css" />
-<script>let $ = require('jquery');</script>
-<script>require('popper.js');</script>
-<script>require('bootstrap');</script>
-<!--<script src="scripts/openbci.js"></script>   Funciones para trabajar con Cyton -->
-
+  <link rel="stylesheet" href="styles/bootstrap.min.css">
+  <script>let $ = require('jquery');</script>
+  <script>require('popper.js');</script>
+  <script>require('bootstrap');</script>
   <script>if (window.module) module = window.module;</script>
 </head>
 
 <body style="background-color:grey;">
   <div class="container">
     <div class="form-group">
-      <label for="nombre" >Nombre</label>
+      <label for="nombre">Nombre</label>
       <input type="text" class="form-control" id="name" placeholder="Angel">
 
-      <button type="button" onclick="start()" id="startAdjustement" class="btn btn-primary" >Iniciar</button>
-      <img id="flip" class="flip" src="">
+      <button type="button" onclick="start(); this.disabled=true;" id="startAdjustement" class="btn btn-primary"
+        disabled="">Iniciar</button>
+      <img id="flip" class="flip" src="" hidden>
       <div class="center" id="text"></div>
     </div>
   </div>
@@ -37,7 +35,7 @@
     const PRE_SEQ_TIME = 2000;
     const POST_SEQ_TIME = 2000;
     var buffer = "";
-    var label = "";
+    var label = "prerun,";
 
     var images = [
       { label: "fitting,", img: 'resources/mentalImg/img/carretera.jpeg', text: '000' },
@@ -56,18 +54,17 @@
       { label: "imagery,", img: null, text: 'mdcn' },
       { label: "imagery,", img: null, text: 'tlfn' }
     ];
-    
+
     var text = $('#text');
     var flip = $('#flip');
     function start() {
-      
+
       var current = 0;
       var array = [];
       const timer = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-      startServer();
+      serverFunc(null);
+      prePost();
       const interval = setInterval(function () {
-        prePost();
-        label = "prerun,";
         array = images;
         main(current);
         if (current < array.length - 1) {
@@ -77,16 +74,15 @@
           label = "postrun,";
           prePost();
           writeFile();
-          
+          serverFunc('stop');
         }
-
-      }, 14200);
+      }, 10000);
 
       async function main(i) {
-
-        await timer(PRE_SEQ_TIME);
         label = "preseq,";
+        await timer(PRE_SEQ_TIME);
         text.text('.');
+        label = "dot,";
         await timer(4000);
         if (array[i].img != null) {
           label = array[i].label
@@ -96,12 +92,12 @@
           text.text('.');
         }
         flip.show();
-
+        label = "img,";
         await timer(1600);
         flip.hide();
         flip.attr('src', '');
         text.text(array[i].text);
-
+        label = "clue,";
         await timer(600);
         text.text('');
         await timer(POST_SEQ_TIME);
@@ -114,44 +110,44 @@
 
     }
 
-    function startServer() {
-        var udp = require('dgram');
-        var server = udp.createSocket('udp4');
-        server.on('error', (err) => {
-            console.error("Error:", err);
-            server.close();
-            process.exit();
-        })
+    function serverFunc(option) {
 
-        // En caso de que 
-        server.on('listening', function () {
-            var address = server.address();
-            var port = address.port;
-            var family = address.family;
-            var ipaddr = address.address;
+      const Cyton = require('@openbci/cyton');
+      const ourBoard = new Cyton();
+      const k = require("@openbci/utilities").constants;
+      ourBoard.connect(k.OBCISimulatorPortName)
+        .then(() => {
+          ourBoard.streamStart();
+          ourBoard.on('sample', (sample) => {
+            buffer += (label + sample.channelData.toString());
+            buffer += "\n";
+          });
+        }).catch(function (err) {
+          console.log("Ocurrió un error al conectar con cyton: " + err);
         });
-        server.on('message', function (msg, info) {
-          var len = msg.toString().length;
-          buffer += (label + msg.toString().substring(22,len-4));
-          buffer += "\n";
-        });
-
-        server.bind("12345");
+      if (option == 'stop') {
+        return ourBoard.streamStop().then(ourBoard.disconnect());
+      }
     }
 
-    function writeFile(){
+    function writeFile() {
       var name = document.getElementById("name").value;
-      const fs = require('fs'); 
+      const fs = require('fs');
       fs.writeFile("app/data/" + name + ".csv", buffer, (err) => {
-                if(err) console.log("error: " + err)
-                else console.log("saved data eeg file");
-            });
-
+        if (err) console.log("error: " + err)
+        else console.log("saved data eeg file");
+      });
     }
-    
+
+    $("#name").keyup(function () {
+      if (this.value.length > 0) {
+        $("#startAdjustement").prop("disabled", false);
+      } else {
+        $("#startAdjustement").prop("disabled", true);
+      }
+    });
+
   </script>
-
-
 </body>
 
 </html>
