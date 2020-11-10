@@ -1,6 +1,4 @@
-<html lang="en">
-
-<head>
+<html lang="en"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -22,9 +20,8 @@
       <label for="nombre">Nombre</label>
       <input type="text" class="form-control" id="name" placeholder="Angel">
 
-      <button type="button" onclick="start(); this.disabled=true;" id="startAdjustement" class="btn btn-primary"
-        disabled="">Iniciar</button>
-      <img id="flip" class="flip" src="" hidden>
+      <button type="button" onclick="start(); this.disabled=true;" id="startAdjustement" class="btn btn-primary" disabled="">Iniciar</button>
+      <img id="flip" class="flip" src="" style="display: none;">
       <div class="center" id="text"></div>
     </div>
   </div>
@@ -36,16 +33,27 @@
     const POST_SEQ_TIME = 2000;
     var buffer = "";
     var label = "prerun,";
+    var name = null;
+    const fs = require('fs');
+
+    $("#name").keyup(function () {
+      if (this.value.length > 0) {
+        $("#startAdjustement").prop("disabled", false);
+        name = document.getElementById("name").value;
+      } else {
+        $("#startAdjustement").prop("disabled", true);
+      }
+    });
 
     var images = [
-      { label: "fitting,", img: 'resources/mentalImg/img/carretera.jpeg', text: '000' },
+      { label: "fitting,", img: 'resources/mentalImg/img/carretera.jpg', text: '000' },
       { label: "fitting,", img: 'resources/mentalImg/img/ciudad.jpg', text: '000' },
-      { label: "fitting,", img: 'resources/mentalImg/img/construccion.jpeg', text: '000' },
+      { label: "fitting,", img: 'resources/mentalImg/img/construccion.jpg', text: '000' },
       { label: "fitting,", img: 'resources/mentalImg/img/fabrica.jpg', text: '000' },
       { label: "fitting,", img: 'resources/mentalImg/img/terreno.jpg', text: '000' },
-      { label: "perception,", img: 'resources/mentalImg/img/cereal.jpg', text: 'crl' },
-      { label: "perception,", img: 'resources/mentalImg/img/cocacola.jpg', text: 'coca' },
-      { label: "perception,", img: 'resources/mentalImg/img/galletas.jpg', text: 'gllt' },
+      { label: "perception,", img: 'resources/mentalImg/img/cereal.jpeg', text: 'crl' },
+      { label: "perception,", img: 'resources/mentalImg/img/cocacola.jpeg', text: 'coca' },
+      { label: "perception,", img: 'resources/mentalImg/img/galletas.jpeg', text: 'gllt' },
       { label: "perception,", img: 'resources/mentalImg/img/pastillas.jpg', text: 'mdcn' },
       { label: "perception,", img: 'resources/mentalImg/img/telefono.jpg', text: 'tlfn' },
       { label: "imagery,", img: null, text: 'crl' },
@@ -57,6 +65,7 @@
 
     var text = $('#text');
     var flip = $('#flip');
+    flip.hide();
     function start() {
 
       var current = 0;
@@ -73,7 +82,6 @@
           clearInterval(interval);
           label = "postrun,";
           prePost();
-          writeFile();
           serverFunc('stop');
         }
       }, 10000);
@@ -85,10 +93,14 @@
         label = "dot,";
         await timer(4000);
         if (array[i].img != null) {
+
           label = array[i].label
           text.text('');
           flip.attr('src', array[i].img);
+          flip.show();
         } else {
+          console.log("hide");
+          flip.hide();
           text.text('.');
         }
         flip.show();
@@ -119,35 +131,24 @@
         .then(() => {
           ourBoard.streamStart();
           ourBoard.on('sample', (sample) => {
-            buffer += (label + sample.channelData.toString());
+            buffer = (label + sample.channelData.toString());
             buffer += "\n";
+            fs.appendFile("app/data/" + name + ".csv",  buffer, (err) => {
+            if (err) console.log("error: " + err)
+            else console.log("saved data eeg file");
+      });
           });
         }).catch(function (err) {
           console.log("Ocurrió un error al conectar con cyton: " + err);
         });
       if (option == 'stop') {
+        console.log(option);
+        fs.close();
         return ourBoard.streamStop().then(ourBoard.disconnect());
       }
     }
 
-    function writeFile() {
-      var name = document.getElementById("name").value;
-      const fs = require('fs');
-      fs.writeFile("app/data/" + name + ".csv", buffer, (err) => {
-        if (err) console.log("error: " + err)
-        else console.log("saved data eeg file");
-      });
-    }
-
-    $("#name").keyup(function () {
-      if (this.value.length > 0) {
-        $("#startAdjustement").prop("disabled", false);
-      } else {
-        $("#startAdjustement").prop("disabled", true);
-      }
-    });
-
   </script>
-</body>
 
-</html>
+
+</body></html>
