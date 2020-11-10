@@ -1,4 +1,6 @@
-<html lang="en"><head>
+<html lang="en">
+
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -20,7 +22,8 @@
       <label for="nombre">Nombre</label>
       <input type="text" class="form-control" id="name" placeholder="Angel">
 
-      <button type="button" onclick="start(); this.disabled=true;" id="startAdjustement" class="btn btn-primary" disabled="">Iniciar</button>
+      <button type="button" onclick="start(); this.disabled=true;" id="startAdjustement" class="btn btn-primary"
+        disabled="">Iniciar</button>
       <img id="flip" class="flip" src="" style="display: none;">
       <div class="center" id="text"></div>
     </div>
@@ -92,17 +95,14 @@
         label = "dot,";
         await timer(4000);
         if (array[i].img != null) {
-
           label = array[i].label
           text.text('');
           flip.attr('src', array[i].img);
           flip.show();
         } else {
-          console.log("hide");
           flip.hide();
           text.text('.');
         }
-        flip.show();
         label = "img,";
         await timer(1600);
         flip.hide();
@@ -127,27 +127,28 @@
       const Cyton = require('@openbci/cyton');
       const ourBoard = new Cyton();
       const k = require("@openbci/utilities").constants;
+      if(option == 'stop') {
+        return
+      }
       ourBoard.connect(k.OBCISimulatorPortName)
         .then(() => {
           ourBoard.streamStart();
           ourBoard.on('sample', (sample) => {
             buffer = (label + sample.channelData.toString());
             buffer += "\n";
-            fs.appendFile("app/data/" + name + ".csv",  buffer, (err) => {
-            if (err) console.log("error: " + err)
-            else console.log("saved data eeg file");
-      });
+            fs.appendFile("app/data/" + name + ".csv", buffer, (err) => {
+              if (err) console.log("error: " + err)
+              else console.log("saved data eeg file");
+            });
           });
         }).catch(function (err) {
           console.log("Ocurrió un error al conectar con cyton: " + err);
         });
-      if (option == 'stop') {
-        console.log(option);
-        return ourBoard.streamStop().then(ourBoard.disconnect());
-      }
     }
 
   </script>
 
 
-</body></html>
+</body>
+
+</html>
