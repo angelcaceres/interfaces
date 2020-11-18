@@ -1,0 +1,32 @@
+{
+  "name": "protocolos",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "rebuild": "npm rebuild --build-from-source",
+    "electron-rebuild": "electron-rebuild -w opencv4nodejs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erovelo/ProyectoBCI.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/erovelo/ProyectoBCI/issues"
+  },
+  "homepage": "https://github.com/erovelo/ProyectoBCI#readme",
+  "devDependencies": {
+    "electron": "4.0.1",
+    "electron-rebuild": "^1.8.5",
+    "bootstrap": "^4.1.3",
+    "jquery": "^3.3.1",
+    "popper.js": "^1.14.4"
+  },
+  "dependencies": {
+    "@openbci/cyton": "^2.0.1"
+  }
+}

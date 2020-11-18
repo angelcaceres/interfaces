@@ -1,0 +1,167 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Estimulación: Detección de emociones</title>
+
+
+  <link rel="stylesheet" href="styles/emoDetectStyle.css">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="styles/bootstrap.min.css">
+  <script>let $ = require('jquery');</script>
+  <script>require('popper.js');</script>
+  <script>require('bootstrap');</script>
+  <script>if (window.module) module = window.module;</script>
+</head>
+
+<body style="background-color:white;">
+  <div class="container">
+    <div class="form-group">
+      <label for="nombre">Nombre del participante</label>
+      <input type="text" class="form-control" id="name" placeholder="Angel">
+
+      <button type="button" onclick="start(); this.disabled=true;" id="startEmoDetect" class="btn btn-primary"
+        disabled="">Iniciar</button>
+    </div>
+    <div class="center" id="text" width="320" height="240">
+
+
+      <h1 id="count"></h1>
+
+    </div>
+    <video width="320" height="240" controls autoplay class="centerVideo" style="display: none;" id="videoEmo">
+      <source src="" type="video/mp4">
+    </video>
+    <form class="AffectiveSlider">
+
+      <div id='AffectiveSlider'>
+      </div>
+      <input type='submit' value='Calificar' />
+
+    </form>
+
+  </div>
+
+  <script>
+    const PRE_RUN_TIME = 2000;
+    var buffer = "";
+    var label = "prerun,";
+    var name = null;
+    const fs = require('fs');
+    var videoEnded = false;
+    var exitacion = null;
+    var placer = null;
+
+    document.getElementById('videoEmo').addEventListener('ended',myHandler,false);
+    function myHandler(e) {
+        videoEnded = true;
+    }
+
+    $("#name").keyup(function () {
+      if (this.value.length > 0) {
+        $("#startEmoDetect").prop("disabled", false);
+      } else {
+        $("#startEmoDetect").prop("disabled", true);
+      }
+    });
+
+    var videos = [
+      { vid: 'resources/video/1.mp4' },
+      { vid: 'resources/video/2.mp4' },
+      { vid: 'resources/video/3.mp4' },
+      { vid: 'resources/video/4.mp4' },
+      { vid: 'resources/video/5.mp4' },
+      { vid: 'resources/video/6.mp4' },
+      { vid: 'resources/video/7.mp4' },
+      { vid: 'resources/video/8.mp4' },
+      { vid: 'resources/video/9.mp4' },
+      { vid: 'resources/video/10.mp4' },
+      { vid: 'resources/video/11.mp4' },
+      { vid: 'resources/video/12.mp4' },
+      { vid: 'resources/video/13.mp4' },
+      { vid: 'resources/video/14.mp4' },
+      { vid: 'resources/video/15.mp4' },
+      { vid: 'resources/video/16.mp4' },
+      { vid: 'resources/video/17.mp4' },
+      { vid: 'resources/video/18.mp4' },
+      { vid: 'resources/video/19.mp4' },
+      { vid: 'resources/video/20.mp4' }
+    ]
+    var video = $('#videoEmo');
+    var count = $('#count');
+    function start() {
+
+      var current = 0;
+      const timer = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+      serverFunc(null);
+      count.text(current + 1);
+      main();
+      async function main(i) {
+        await timer(2000);
+        count.hide();
+        $("#videoEmo").html('<source src="' + videos[current].vid +'" type="video/mp4"></source>' );
+        video.show();
+        if (current < videos.length -1) {
+          current++
+        } else {
+          label = "postrun,";
+          prePost();
+          serverFunc('stop');
+        }        
+      }
+
+      async function prePost() {
+        await timer(PRE_RUN_TIME);
+      }
+
+    }
+
+    function serverFunc(option) {
+      name = document.getElementById("name").value;
+
+      const Cyton = require('@openbci/cyton');
+      const ourBoard = new Cyton();
+      const k = require("@openbci/utilities").constants;
+      if (option == 'stop') {
+        return
+      }
+      ourBoard.connect(k.OBCISimulatorPortName)
+        .then(() => {
+          ourBoard.streamStart();
+          ourBoard.on('sample', (sample) => {
+            buffer = (label + sample.channelData.toString());
+            buffer += "\n";
+            fs.appendFile("app/data/" + name + ".csv", buffer, (err) => {
+              if (err) console.log("error: " + err)
+              else console.log("saved data eeg file");
+            });
+          });
+        }).catch(function (err) {
+          console.log("Ocurrió un error al conectar con cyton: " + err);
+        });
+    }
+
+    window.onload = function () {
+      document.getElementById("count").innerHTML = "0";
+      var aff_slider = document.getElementById('AffectiveSlider');
+
+      var arousal_part = 'Nivel de excitación \n<div class="arousal"> \n<object class="arousal_svg" type="image/svg+xml" data="resources/images/AS_sleepy.svg"></object> \n<input type="range" name="AS-arousal" id="AS-arousal" value=".5" min="0" max="1" step=".01" /> \n<object class="arousal_svg" type="image/svg+xml" data="resources/images/AS_wideawake.svg"></object> \n<object class="intensity_cue_svg" type="image/svg+xml" data="resources/images/AS_intensity_cue.svg"></object></div>';
+
+      var pleasure_part = 'Nivel de placer \n<div class="pleasure"> \n<object class="arousal_svg" type="image/svg+xml" data="resources/images/AS_unhappy.svg"></object> \n<input type="range" name="AS-pleasure" id="AS-pleasure" value=".5" min="0" max="1" step=".01" /> \n<object class="arousal_svg" type="image/svg+xml" data="resources/images/AS_happy.svg"></object> \n<object class="intensity_cue_svg" type="image/svg+xml" data="resources/images/AS_intensity_cue.svg"></object> \n</div>';
+
+      if (Math.random() > 0.5) {
+        aff_slider.innerHTML = arousal_part + pleasure_part;
+      }
+      else {
+        aff_slider.innerHTML = pleasure_part + arousal_part;
+      }
+    }
+
+  </script>
+
+
+</body>
+
+</html>
