@@ -31,14 +31,14 @@
       <h1 id="count"></h1>
 
     </div>
-    <video width="320" height="240" controls autoplay class="centerVideo" style="display: none;" id="videoEmo">
+    <video width="320" height="240" autoplay class="centerVideo" controls style="display: none;" id="videoEmo">
       <source src="" type="video/mp4">
     </video>
     <form class="AffectiveSlider">
 
       <div id='AffectiveSlider'>
       </div>
-      <input type='submit' value='Calificar' />
+      <button type="button" onclick="calificar()" id="rateBtn" class="btn btn-primary">Calificar</button>
 
     </form>
 
@@ -47,16 +47,33 @@
   <script>
     const PRE_RUN_TIME = 2000;
     var buffer = "";
-    var label = "prerun,";
+    var label = "prerun,0,";
     var name = null;
     const fs = require('fs');
+    var videoStarted;
     var videoEnded = false;
     var exitacion = null;
     var placer = null;
+    var video = $('#videoEmo');
+    var count = $('#count');
 
-    document.getElementById('videoEmo').addEventListener('ended',myHandler,false);
-    function myHandler(e) {
-        videoEnded = true;
+    var current = 0;
+    const timer = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    document.getElementById('videoEmo').addEventListener('ended', onStopVideo, false);
+    function onStopVideo(e) {
+      videoEnded = true;
+      if (exitacion == null || placer == null) {
+        label = "postrun,0,";
+      } else {
+        start();
+      }
+    }
+
+    document.getElementById('videoEmo').addEventListener('loadedmetadata', onStartVideo, false);
+    function onStartVideo(e) {
+      videoEnded = false;
+      $("#rateBtn").prop("disabled", false);
     }
 
     $("#name").keyup(function () {
@@ -68,7 +85,7 @@
     });
 
     var videos = [
-      { vid: 'resources/video/1.mp4' },
+      /*{ vid: 'resources/video/1.mp4' },
       { vid: 'resources/video/2.mp4' },
       { vid: 'resources/video/3.mp4' },
       { vid: 'resources/video/4.mp4' },
@@ -85,37 +102,61 @@
       { vid: 'resources/video/15.mp4' },
       { vid: 'resources/video/16.mp4' },
       { vid: 'resources/video/17.mp4' },
-      { vid: 'resources/video/18.mp4' },
+      { vid: 'resources/video/18.mp4' },*/
       { vid: 'resources/video/19.mp4' },
       { vid: 'resources/video/20.mp4' }
-    ]
-    var video = $('#videoEmo');
-    var count = $('#count');
-    function start() {
+    ];
 
-      var current = 0;
-      const timer = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    function start() {
+      videoEnded = false;
+      document.getElementById("AS-arousal").value = 0.5;
+      document.getElementById("AS-pleasure").value = 0.5;
+      video.hide();
       serverFunc(null);
-      count.text(current + 1);
       main();
       async function main(i) {
+        label = "prerun,0,";
+        count.text(current + 1);
+        count.show();
         await timer(2000);
+        if (current < videos.length) {
         count.hide();
-        $("#videoEmo").html('<source src="' + videos[current].vid +'" type="video/mp4"></source>' );
+        label = "video," + (current + 1) + ",";
+        document.getElementById("videoEmo").src = videos[current].vid;
         video.show();
-        if (current < videos.length -1) {
-          current++
+        document.getElementById("videoEmo").load();
         } else {
-          label = "postrun,";
+          count.text("Fin");
+          count.show();
+          label = "postrun,0,";
           prePost();
           serverFunc('stop');
-        }        
+        }
+        current++;
       }
 
       async function prePost() {
         await timer(PRE_RUN_TIME);
       }
 
+    }
+
+    function calificar() {
+      exitacion = document.getElementById("AS-arousal").value;
+      placer = document.getElementById("AS-pleasure").value;
+      $("#rateBtn").prop("disabled", true);
+      var ratings = "";
+      if (videoEnded) {
+        start();
+      }
+      ratings = current + "," + exitacion + "," + placer;
+      ratings += "\n";
+      fs.appendFile("app/data/" + name + "-ratings.csv", ratings, (err) => {
+        if (err) {
+          console.log("error: " + err)
+        } 
+      });
     }
 
     function serverFunc(option) {
@@ -134,12 +175,16 @@
             buffer = (label + sample.channelData.toString());
             buffer += "\n";
             fs.appendFile("app/data/" + name + ".csv", buffer, (err) => {
-              if (err) console.log("error: " + err)
-              else console.log("saved data eeg file");
+              if (err) {
+
+              } //console.log("error: " + err)
+              else {
+
+              } //console.log("saved data eeg file");
             });
           });
         }).catch(function (err) {
-          console.log("Ocurrió un error al conectar con cyton: " + err);
+          //console.log("Ocurrió un error al conectar con cyton: " + err);
         });
     }
 
