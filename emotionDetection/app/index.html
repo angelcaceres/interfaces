@@ -176,15 +176,15 @@
             buffer += "\n";
             fs.appendFile("app/data/" + name + ".csv", buffer, (err) => {
               if (err) {
-
-              } //console.log("error: " + err)
+                console.log("error: " + err)
+              } 
               else {
-
-              } //console.log("saved data eeg file");
+                console.log("saved data eeg file");
+              } 
             });
           });
         }).catch(function (err) {
-          //console.log("Ocurrió un error al conectar con cyton: " + err);
+          console.log("Ocurrió un error al conectar con cyton: " + err);
         });
     }
 
