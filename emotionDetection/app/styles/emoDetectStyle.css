@@ -186,3 +186,7 @@
   div {
     margin-bottom: 2em;
   }
+  video {
+    object-fit: cover;
+    left: 100;
+  }

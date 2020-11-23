@@ -31,14 +31,16 @@
       <h1 id="count"></h1>
 
     </div>
-    <video width="320" height="240" autoplay class="centerVideo" controls style="display: none;" id="videoEmo">
+    <video width="800" height="600" autoplay controls class="centerVideo"  style="display: none;" id="videoEmo">
       <source src="" type="video/mp4">
     </video>
     <form class="AffectiveSlider">
 
-      <div id='AffectiveSlider'>
+      <div id='AffectiveSlider' style="display: none;">
+        
       </div>
-      <button type="button" onclick="calificar()" id="rateBtn" class="btn btn-primary">Calificar</button>
+      <button type="button" onclick="calificar()" id="rateBtn" class="btn btn-primary"  style="display: none;"  >Calificar</button>
+      
 
     </form>
 
@@ -56,12 +58,16 @@
     var placer = null;
     var video = $('#videoEmo');
     var count = $('#count');
+    var slider = $('#AffectiveSlider');
+    var rateBtn = $('#rateBtn');
 
     var current = 0;
     const timer = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
     document.getElementById('videoEmo').addEventListener('ended', onStopVideo, false);
     function onStopVideo(e) {
+      slider.show();
+      rateBtn.show();
       videoEnded = true;
       if (exitacion == null || placer == null) {
         label = "postrun,0,";
@@ -85,7 +91,7 @@
     });
 
     var videos = [
-      /*{ vid: 'resources/video/1.mp4' },
+      { vid: 'resources/video/1.mp4' },
       { vid: 'resources/video/2.mp4' },
       { vid: 'resources/video/3.mp4' },
       { vid: 'resources/video/4.mp4' },
@@ -102,7 +108,7 @@
       { vid: 'resources/video/15.mp4' },
       { vid: 'resources/video/16.mp4' },
       { vid: 'resources/video/17.mp4' },
-      { vid: 'resources/video/18.mp4' },*/
+      { vid: 'resources/video/18.mp4' },
       { vid: 'resources/video/19.mp4' },
       { vid: 'resources/video/20.mp4' }
     ];
@@ -116,10 +122,14 @@
       serverFunc(null);
       main();
       async function main(i) {
+        slider.hide();
+        rateBtn.hide();
         label = "prerun,0,";
         count.text(current + 1);
         count.show();
         await timer(2000);
+        count.text('✚');
+        await timer(5000);
         if (current < videos.length) {
         count.hide();
         label = "video," + (current + 1) + ",";
