@@ -18,15 +18,14 @@
 
 <body style="background-color:grey;">
   <div class="container">
-    <div class="form-group">
-      <label for="nombre">Nombre</label>
+    <div class="form-group" id="nameForm">
+      <label for="name">Nombre</label>
       <input type="text" class="form-control" id="name" placeholder="Angel">
-
       <button type="button" onclick="start(); this.disabled=true;" id="startAdjustement" class="btn btn-primary"
         disabled="">Iniciar</button>
-      <img id="flip" class="flip" src="" style="display: none;">
-      <div class="center" id="text"></div>
     </div>
+    <img id="flip" class="flip" src="" style="display: none;">
+    <div class="center" id="text"></div>
   </div>
 
   <script>
@@ -67,9 +66,11 @@
 
     var text = $('#text');
     var flip = $('#flip');
+    var form = $('#nameForm');
     flip.hide();
+    
     function start() {
-
+      form.hide();
       var current = 0;
       var array = [];
       const timer = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -127,7 +128,7 @@
       const Cyton = require('@openbci/cyton');
       const ourBoard = new Cyton();
       const k = require("@openbci/utilities").constants;
-      if(option == 'stop') {
+      if (option == 'stop') {
         return
       }
       ourBoard.connect(k.OBCISimulatorPortName)
@@ -147,7 +148,6 @@
     }
 
   </script>
-
 
 </body>
 
