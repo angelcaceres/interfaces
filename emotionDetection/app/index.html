@@ -18,7 +18,7 @@
 
 <body style="background-color:white;">
   <div class="container">
-    <div class="form-group">
+    <div class="form-group" id = "nameForm">
       <label for="nombre">Nombre del participante</label>
       <input type="text" class="form-control" id="name" placeholder="Angel">
 
@@ -60,12 +60,14 @@
     var count = $('#count');
     var slider = $('#AffectiveSlider');
     var rateBtn = $('#rateBtn');
+    var form = $('#nameForm');
 
     var current = 0;
     const timer = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
     document.getElementById('videoEmo').addEventListener('ended', onStopVideo, false);
     function onStopVideo(e) {
+      console.log("video ended");
       slider.show();
       rateBtn.show();
       videoEnded = true;
@@ -106,9 +108,12 @@
 
 
     function start() {
+      form.hide();
       videoEnded = false;
       document.getElementById("AS-arousal").value = 0.5;
       document.getElementById("AS-pleasure").value = 0.5;
+      placer = null;
+      exitacion=null;
       video.hide();
       serverFunc(null);
       main();
@@ -126,7 +131,6 @@
         label = "video," + (current + 1) + ",";
         document.getElementById("videoEmo").src = videos[current].vid;
         video.show();
-        document.getElementById("videoEmo").load();
         } else {
           count.text("Fin");
           count.show();

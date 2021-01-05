@@ -11,6 +11,8 @@ function createWindow () {
     }
   });
 
+  win.maximize()
+
   // and load the index.html of the app.
   win.loadFile('app/index.html');
 }
