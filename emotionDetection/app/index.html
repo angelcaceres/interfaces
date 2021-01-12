@@ -18,7 +18,7 @@
 
 <body style="background-color:white;">
   <div class="container">
-    <div class="form-group" id = "nameForm">
+    <div class="form-group" id="nameForm">
       <label for="nombre">Nombre del participante</label>
       <input type="text" class="form-control" id="name" placeholder="Angel">
 
@@ -31,16 +31,17 @@
       <h1 id="count"></h1>
 
     </div>
-    <video width="800" height="600" autoplay controls class="centerVideo"  style="display: none;" id="videoEmo">
+    <video width="800" height="600" autoplay controls class="centerVideo" style="display: none;" id="videoEmo">
       <source src="" type="video/mp4">
     </video>
     <form class="AffectiveSlider">
 
       <div id='AffectiveSlider' style="display: none;">
-        
+
       </div>
-      <button type="button" onclick="calificar()" id="rateBtn" class="btn btn-primary"  style="display: none;"  >Calificar</button>
-      
+      <button type="button" onclick="calificar()" id="rateBtn" class="btn btn-primary"
+        style="display: none;">Calificar</button>
+
 
     </form>
 
@@ -87,6 +88,7 @@
     $("#name").keyup(function () {
       if (this.value.length > 0) {
         $("#startEmoDetect").prop("disabled", false);
+
       } else {
         $("#startEmoDetect").prop("disabled", true);
       }
@@ -113,7 +115,7 @@
       document.getElementById("AS-arousal").value = 0.5;
       document.getElementById("AS-pleasure").value = 0.5;
       placer = null;
-      exitacion=null;
+      exitacion = null;
       video.hide();
       serverFunc(null);
       main();
@@ -127,10 +129,10 @@
         count.text('✚');
         await timer(5000);
         if (current < videos.length) {
-        count.hide();
-        label = "video," + (current + 1) + ",";
-        document.getElementById("videoEmo").src = videos[current].vid;
-        video.show();
+          count.hide();
+          label = "video," + (current + 1) + ",";
+          document.getElementById("videoEmo").src = videos[current].vid;
+          video.show();
         } else {
           count.text("Fin");
           count.show();
@@ -160,39 +162,13 @@
       fs.appendFile("app/data/" + name + "-ratings.csv", ratings, (err) => {
         if (err) {
           console.log("error: " + err)
-        } 
+        }
       });
     }
 
     function serverFunc(option) {
-      name = document.getElementById("name").value;
-
-      const Cyton = require('@openbci/cyton');
-      const ourBoard = new Cyton();
-      const k = require("@openbci/utilities").constants;
-      if (option == 'stop') {
-        return
-      }
-      ourBoard.connect(k.OBCISimulatorPortName)
-        .then(() => {
-          ourBoard.streamStart();
-          ourBoard.on('sample', (sample) => {
-            buffer = (label + sample.channelData.toString());
-            buffer += "\n";
-            fs.appendFile("app/data/" + name + ".csv", buffer, (err) => {
-              if (err) {
-                console.log("error: " + err)
-              } 
-              else {
-                console.log("saved data eeg file");
-              } 
-            });
-          });
-        }).catch(function (err) {
-          console.log("Ocurrió un error al conectar con cyton: " + err);
-        });
+    name = document.getElementById("name").value;
     }
-
     window.onload = function () {
       document.getElementById("count").innerHTML = "0";
       var aff_slider = document.getElementById('AffectiveSlider');
@@ -209,6 +185,47 @@
       }
     }
 
+    $(document).ready(function () {
+        var udp = require('dgram');
+
+        var server = udp.createSocket('udp4');
+
+        // En caso de error
+        server.on('error', (err) => {
+            console.error("Error:", err);
+            server.close();
+            process.exit();
+        })
+
+        // En caso de que 
+        server.on('listening', function () {
+            var address = server.address();
+            var port = address.port;
+            var family = address.family;
+            var ipaddr = address.address;
+            console.log('Server is listening at port ' + port);
+            console.log('Server ip :' + ipaddr);
+            console.log('Server is IP4/IP6 : ' + family);
+        });
+
+
+        // Se llama cuando llega un nuevo datagram msg
+        server.on('message', function (msg, info) {
+          if(name!=null||name!='null'){
+          var msgLength = msg.toString().length
+          buffer = (label + msg.toString().substring(22,msgLength-4));
+          buffer += "\n";
+          fs.appendFile("app/data/" + name + ".csv", buffer, (err) => {
+            if (err) {
+              console.log("error: " + err)
+            }
+            else {
+              console.log("saved data eeg file");
+            }
+          });}
+      })
+        server.bind(12345);
+    })
   </script>
 
 
