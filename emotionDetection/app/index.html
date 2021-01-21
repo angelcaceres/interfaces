@@ -48,6 +48,8 @@
   </div>
 
   <script>
+    var udp = require('dgram');
+    var server = udp.createSocket('udp4');
     const PRE_RUN_TIME = 2000;
     var buffer = "";
     var label = "prerun,0,";
@@ -185,11 +187,7 @@
       }
     }
 
-    $(document).ready(function () {
-        var udp = require('dgram');
-
-        var server = udp.createSocket('udp4');
-
+    function startServer() {
         // En caso de error
         server.on('error', (err) => {
             console.error("Error:", err);
@@ -225,7 +223,7 @@
           });}
       })
         server.bind(12345);
-    })
+    }
   </script>
 
 
