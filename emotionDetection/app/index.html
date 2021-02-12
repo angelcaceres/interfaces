@@ -97,6 +97,22 @@
     });
 
     var videos = [
+      { vid: 'resources/videoRobot/01_austero_editado.mp4' },
+      { vid: 'resources/videoRobot/1_editado.mp4' },
+      { vid: 'resources/videoRobot/02_austero_editado.mp4' },
+      { vid: 'resources/videoRobot/2_editado.mp4' },
+      { vid: 'resources/videoRobot/03_austero_editado.mp4' },
+      { vid: 'resources/videoRobot/3_editado.mp4' },
+      { vid: 'resources/videoRobot/04_austero_editado.mp4' },
+      { vid: 'resources/videoRobot/4_editado.mp4' },
+      { vid: 'resources/videoRobot/05_austero_editado.mp4' },
+      { vid: 'resources/videoRobot/5_editado.mp4' },
+      { vid: 'resources/videoRobot/06_austero_editado.mp4' },
+      { vid: 'resources/videoRobot/6_editado.mp4' }
+    ];
+
+/*
+    var videos = [
       { vid: 'resources/video/1.mp4' },
       { vid: 'resources/video/2.mp4' },
       { vid: 'resources/video/3.mp4' },
@@ -110,7 +126,7 @@
       { vid: 'resources/video/11.mp4' }
     ];
 
-
+*/
     function start() {
       form.hide();
       videoEnded = false;
@@ -156,22 +172,22 @@
       placer = document.getElementById("AS-pleasure").value;
       $("#rateBtn").prop("disabled", true);
       var ratings = "";
-      if (videoEnded) {
-        start();
-      }
       ratings = current + "," + exitacion + "," + placer;
       ratings += "\n";
+      console.log(ratings)
       fs.appendFile("app/data/" + name + "-ratings.csv", ratings, (err) => {
         if (err) {
           console.log("error: " + err)
         }
       });
+      start();
     }
 
     function serverFunc(option) {
     name = document.getElementById("name").value;
     }
     window.onload = function () {
+      startServer();
       document.getElementById("count").innerHTML = "0";
       var aff_slider = document.getElementById('AffectiveSlider');
 
