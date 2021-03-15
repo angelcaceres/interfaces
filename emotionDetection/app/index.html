@@ -181,7 +181,7 @@
       placer = document.getElementById("AS-pleasure").value;
       $("#rateBtn").prop("disabled", true);
       var ratings = "";
-      ratings = current + "," + exitacion + "," + placer;
+      ratings = current + "," + placer + "," + exitacion;
       ratings += "\n";
       console.log(ratings)
       fs.appendFile("app/data/" + name + "-ratings.csv", ratings, (err) => {
