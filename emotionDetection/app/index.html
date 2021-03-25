@@ -20,11 +20,17 @@
   <div class="container">
     <div class="form-group" id="nameForm">
       <label for="nombre">Nombre del participante</label>
+      <div class="input-group">
       <input type="text" class="form-control" id="name" placeholder="Angel">
-
+      <select class="form-select" id="select">
+        <option selected="true" disabled="disabled">Tipo de videos</option>
+        <option value="musica">Musicales</option>
+        <option value="robot">Robot</option>
+      </select>
       <button type="button" onclick="start(); this.disabled=true;" id="startEmoDetect" class="btn btn-primary"
         disabled="">Iniciar</button>
     </div>
+  </div>
     <div class="center" id="text" width="320" height="240">
 
 
@@ -64,9 +70,11 @@
     var slider = $('#AffectiveSlider');
     var rateBtn = $('#rateBtn');
     var form = $('#nameForm');
-
+    var videos=null;
     var current = 0;
     const timer = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    var option=null;
+    var recording = false;
 
     document.getElementById('videoEmo').addEventListener('ended', onStopVideo, false);
     function onStopVideo(e) {
@@ -95,8 +103,8 @@
         $("#startEmoDetect").prop("disabled", true);
       }
     });
-/*
-    var videos = [
+
+    var videosRobot = [
       { vid: 'resources/videoRobot/01_austero_editado.mp4' },
       { vid: 'resources/videoRobot/1_editado.mp4' },
       { vid: 'resources/videoRobot/02_austero_editado.mp4' },
@@ -110,9 +118,8 @@
       { vid: 'resources/videoRobot/06_austero_editado.mp4' },
       { vid: 'resources/videoRobot/6_editado.mp4' }
     ];
-*/
 
-    var videos = [
+    var videosMusic = [
       { vid: 'resources/video/1.mp4'},//A Fine Frenzy - Almost Lover Official Video
       { vid: 'resources/video/2.mp4'},//Bishop Allen - Butterfly Nets
       { vid: 'resources/video/3.mp4'},//Alphabeat - Fascination
@@ -137,6 +144,12 @@
 
 
     function start() {
+      option = document.getElementById("select").value;
+      if(option=='musica'){
+        videos=videosMusic
+      }else{
+        videos=videosRobot
+      }
       form.hide();
       videoEnded = false;
       document.getElementById("AS-arousal").value = 0.5;
